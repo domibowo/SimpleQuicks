@@ -1,0 +1,76 @@
+.fab-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.fab-main {
+  border-radius: 50%;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  border: transparent;
+}
+
+.fab-options {
+  display: flex;
+  flex-direction: row-reverse;
+  position: absolute;
+  bottom: 15px;
+  right: 60px;
+  margin-right: 20px;
+}
+
+.fab-option {
+  margin-left: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  border: transparent;
+  flex-direction: column;
+}
+
+.img-quick-logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+}
+
+.img-option-logo {
+  width: 60px;
+  height: 60px;
+}
+
+.fab-text {
+  color: #F2F2F2;
+}
+
+.img-shadow {
+  box-shadow: -15px 0px #4F4F4F;
+}
+
+.action-open {
+  flex-direction: row;
+}
+
+.btn-action-open {
+  background-color: transparent;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  position: absolute;
+  bottom: -5px;
+  right: 60px;
+  margin-right: 31px;
+  border: transparent;
+}
+
+.sub-quick-logo {
+  width: 26.67px;
+  height: 26.67px;
+  align-self: center;
+  position: absolute;
+}
