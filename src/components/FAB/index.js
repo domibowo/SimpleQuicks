@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import './index.css';
+import Modal from '../Modal';
 
 const FAB = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,61 +29,64 @@ const FAB = () => {
   const taskLogo = require('../../assets/icon/todo-white-logo.png')
   
   const TodoLogo = () => (
-    <div className='img-quick-logo fab-main img-shadow' style={{backgroundColor:'#F8B76B'}}>
+    <Button className='rounded-circle fab-main img-quick-logo' style={{backgroundColor:'#F8B76B'}} onClick={toggleTaskActionFab}>
       <img className='sub-quick-logo' src={require('../../assets/icon/todo-icon.png')} alt='todo icon'/>
-    </div>
+    </Button>
   )
 
   const ChatLogo = () => (
-    <div className='img-quick-logo fab-main img-shadow' style={{backgroundColor:'#8785FF'}}>
-      <img className='sub-quick-logo' src={require('../../assets/icon/chat-icon.png')} alt='chat icon'/>
-    </div>
+    <Button className='rounded-circle fab-main img-quick-logo' style={{backgroundColor:'#8785FF'}} onClick={toggleChatActionFab}>
+      <img className='sub-quick-logo' src={require('../../assets/icon/chat-icon.png')} alt='quick logo'/>
+    </Button>
   )
 
   return (
-    <div className="fab-container">
-      {isChatActionOpen && (
-        <div className='action-open'>
-          <ChatLogo/>
-          <Button className="img-option-logo btn-action-open" color='#F2F2F2' onClick={toggleTaskActionFab}>
-            <img className='img-option-logo' src={taskLogo} alt='task logo'/>
-          </Button>
-        </div>
-      )}
-      {isTaskActionOpen && (
-        <div className='fab-main img-quick-logo'>
-          <TodoLogo />
-          <div className="fab-options">
-            <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleChatActionFab}>
-              <img className='img-option-logo' src={chatLogo} alt='chat logo' />
-            </Button>
+    <div style={{flex:1}}>
+      <Modal/>
+      <div className="fab-container">
+        {isChatActionOpen && (
+          <div style={{flex: 1}}>
+            <ChatLogo/>
+            <div className="fab-options">
+              <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleTaskActionFab}>
+                <img className='img-option-logo' src={taskLogo} alt='task logo' />
+              </Button>
+            </div>
           </div>
-          {/* <Button className="img-option-logo btn-action-open" color='#F2F2F2' onClick={toggleChatActionFab}>
-            <img className='img-option-logo' src={chatLogo} alt='chat logo'/>
-          </Button> */}
-        </div>
-      )}
-      {
-        (!isTaskActionOpen && !isChatActionOpen) && (
-          <div style={{flex:1}}>
-            <Button className='fab-main img-quick-logo' color='#2F80ED' onClick={toggleFab}>
-              <img className='img-quick-logo' src={quickImg} alt='quick logo'/>
-            </Button>
-            {isOpen && (
-              <div className="fab-options">
-                <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleChatActionFab}>
-                  <text className='fab-text'>Inbox</text>
-                  <img className='img-option-logo' src={chatLogo} alt='chat logo'/>
-                </Button>
-                <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleTaskActionFab}>
-                  <text className='fab-text'>Task</text>
-                  <img className='img-option-logo' src={taskLogo} alt='task logo'/>
-                </Button>
-              </div>
-            )}
+        )}
+        {isTaskActionOpen && (
+          <div style={{flex: 1}}>
+            <TodoLogo />
+            <div className="fab-options">
+              <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleChatActionFab}>
+                <img className='img-option-logo' src={chatLogo} alt='chat logo' />
+              </Button>
+            </div>
           </div>
-        )
-      }
+        )}
+        {
+          (!isTaskActionOpen && !isChatActionOpen) && (
+            <div style={{flex:1}}>
+              <Button className='rounded-circle fab-main img-quick-logo' color='#2F80ED' onClick={toggleFab}>
+                <img className='img-quick-logo' src={quickImg} alt='quick logo'/>
+              </Button>
+              {isOpen && (
+                <div className="fab-options">
+                  <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleChatActionFab}>
+                    <text className='fab-text'>Inbox</text>
+                    <img className='img-option-logo' src={chatLogo} alt='chat logo'/>
+                  </Button>
+                  <Button className="fab-option img-option-logo" color='#F2F2F2' onClick={toggleTaskActionFab}>
+                    <text className='fab-text'>Task</text>
+                    <img className='img-option-logo' src={taskLogo} alt='task logo'/>
+                  </Button>
+                </div>
+              )}
+            </div>
+          )
+        }
+      </div>
+
     </div>
   );
 };

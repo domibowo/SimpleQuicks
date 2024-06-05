@@ -10,7 +10,7 @@
 .fab-main {
   border-radius: 50%;
   display: flex;
-  align-self: center;
+  align-items: center;
   justify-content: center;
   border: transparent;
 }
@@ -75,10 +75,9 @@
   width: 26.67px;
   height: 26.67px;
   align-self: center;
-  position: absolute;
 }
 
-@media (max-width: 1024px) {
+/* @media (max-width: 1024px) {
   .fab-container {
     bottom: 15px;
     right: 15px;
@@ -160,4 +159,4 @@
     width: 30px;
     height: 30px;
   }
-}
+} */
