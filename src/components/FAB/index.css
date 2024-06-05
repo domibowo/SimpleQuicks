@@ -1,3 +1,6 @@
+/* index.css */
+
+/* Common styles */
 .fab-container {
   position: absolute;
   bottom: 20px;
@@ -73,4 +76,88 @@
   height: 26.67px;
   align-self: center;
   position: absolute;
+}
+
+@media (max-width: 1024px) {
+  .fab-container {
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .fab-options {
+    bottom: 10px;
+    right: 50px;
+    margin-right: 15px;
+  }
+
+  .img-quick-logo {
+    width: 58px;
+    height: 58px;
+  }
+
+  .img-option-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .sub-quick-logo {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fab-container {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .fab-options {
+    bottom: 5px;
+    right: 40px;
+    margin-right: 10px;
+  }
+
+  .img-quick-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .img-option-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .sub-quick-logo {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .fab-container {
+    bottom: 25px;
+    right: 25px;
+  }
+
+  .fab-options {
+    bottom: 20px;
+    right: 70px;
+    margin-right: 25px;
+  }
+
+  .img-quick-logo {
+    width: 78px;
+    height: 78px;
+  }
+
+  .img-option-logo {
+    width: 70px;
+    height: 70px;
+  }
+
+  .sub-quick-logo {
+    width: 30px;
+    height: 30px;
+  }
 }
