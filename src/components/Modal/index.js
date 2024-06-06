@@ -12,7 +12,7 @@ const Modal = () => {
       borderRadius: '8px',
       boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       overflowY: 'auto',
-      bottom: '9  0px',
+      bottom: '90px',
       right: '20px',
       position: 'absolute'
     }}>
