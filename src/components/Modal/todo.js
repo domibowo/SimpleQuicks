@@ -26,24 +26,26 @@ const Todo = () => {
         padding: '10px',
         borderRadius: '8px',
         marginBottom: '10px',
-        boxShadow: '0 0 5px rgba(0,0,0,0.1)'
+        boxShadow: '0 0 5px rgba(0,0,0,0.1)',
+        width: '100%'
       }}>
-        <Row>
-          <Col xs=''>
-            <FormGroup check>
-              <Label check>
-                <Input type="checkbox" />{' '}
-                  <strong style={{
-                    marginLeft: 40,
-                    textWrap: 'wrap'
-                  }}>{item.title}</strong>
-              </Label>
-            </FormGroup>
-          </Col>
-        </Row>
+        <div style={{ width: '75%' }}>
+          <FormGroup check>
+            <Label check style={{ display: 'flex', alignItems: 'center' }}>
+              <Input type="checkbox" />{' '}
+              <strong style={{
+                marginLeft: 22,
+                wordWrap: 'break-word',
+                flex: 1,
+                textAlign: 'justify'
+              }}>{item.title}</strong>
+            </Label>
+          </FormGroup>
+        </div>
       </div>
     )
   }
+
 
   return (
     <div>
