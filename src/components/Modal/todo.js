@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap'
+import { Button, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap'
 import { getTodos } from '../../action'
 import moment from 'moment'
 import { GoChevronDown } from 'react-icons/go'
@@ -16,6 +16,8 @@ const Todo = () => {
   const [isOpen, setIsOpen] = React.useState(null);
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [showCalendar, setShowCalendar] = React.useState(false);
+  const [dateChanged, setDateChanged] = React.useState(false)
+  const [isEdit, setIsEdit] = React.useState(false)
 
   React.useEffect(() => {
     getTodos().then(data => {
@@ -32,11 +34,11 @@ const Todo = () => {
     )
   };
 
-  const toggleAccordion = (idx) => {
-    if (isOpen === idx) {
-      setIsOpen(null); // Close if already open
+  const toggleAccordion = (id) => {
+    if (isOpen === id) {
+      setIsOpen(null);
     } else {
-      setIsOpen(idx); // Open specific item
+      setIsOpen(id);
     }
   };
 
@@ -104,6 +106,7 @@ const Todo = () => {
                   value={selectedDate ? moment(selectedDate).utc().format('DD/MM/YYYY') : ''}
                   readOnly
                   onClick={toggleShowCalendar}
+                  onChange={() => setDateChanged(true)}
                 />
                 <InputGroupText style={{ backgroundColor: 'transparent', borderLeftWidth: 0 }}>
                   <MdOutlineCalendarToday onClick={toggleShowCalendar} />
@@ -124,9 +127,16 @@ const Todo = () => {
             </div>
             <InputGroup style={{marginTop: 10}}>
               <InputGroupText style={{ borderWidth: 0, backgroundColor: 'transparent' }}>
-                <RiPencilLine />
+                <RiPencilLine color={ isEdit ? 'blue' : 'black' } />
               </InputGroupText>
-              <Input placeholder="No Description" style={{borderWidth: 0}}/>
+              <Input
+                placeholder="No Description"
+                style={{ borderWidth: 0 }}
+                size={3}
+                type='textarea'
+                className='static-input'
+                onChange={() => setIsEdit(true)}
+              />
             </InputGroup>
           </div>
         )}
@@ -136,6 +146,37 @@ const Todo = () => {
 
   return (
     <div>
+      <div style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}>
+        <Input
+          id="myTask"
+          name="select"
+          type="select"
+          defaultValue=""
+          style={{
+            width: '40%'
+          }}
+        >
+          <option hidden value="">
+            My Task
+          </option>
+          <option>
+            Personal Errands
+          </option>
+          <option>
+            Urgent To-Do
+          </option>
+        </Input>
+        <Button
+          color="primary"
+        >
+          New Task
+        </Button>
+      </div>
       {todos.map((item, index) => (
         todoItem(item, index, isOpen, toggleAccordion)
       ))}

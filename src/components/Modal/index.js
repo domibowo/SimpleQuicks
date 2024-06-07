@@ -5,7 +5,7 @@ import { Container } from 'reactstrap'
 const Modal = () => {
   return (
     <Container style={{
-      height: '737px',
+      height: '80%',
       width: '734px',
       backgroundColor: '#FFFFFF',
       padding: '20px',
