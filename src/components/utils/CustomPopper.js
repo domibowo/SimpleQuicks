@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Popover, PopoverBody } from 'reactstrap';
 
-const CustomPopover = ({ triggerId, content, placement = 'bottom' }) => {
+const CustomPopover = ({ triggerId, content, placement = 'bottom', btnAction={} }) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const togglePopover = () => setPopoverOpen(!popoverOpen);
 
@@ -17,7 +17,10 @@ const CustomPopover = ({ triggerId, content, placement = 'bottom' }) => {
         toggle={togglePopover}
         hideArrow
       >
-        <PopoverBody>
+        <PopoverBody onClick={() => {
+          togglePopover()
+          btnAction()
+        }}>
           {content.body}
         </PopoverBody>
       </Popover>
