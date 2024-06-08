@@ -42,7 +42,7 @@ const FAB = () => {
 
   return (
     <div style={{flex:1}}>
-      <Modal/>
+      {(isChatActionOpen || isTaskActionOpen) && <Modal/>}
       <div className="fab-container">
         {isChatActionOpen && (
           <div style={{flex: 1}}>

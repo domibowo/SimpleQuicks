@@ -5,18 +5,23 @@ import TodoItem from '../Todo/TodoItem'
 
 const Todo = () => {
   const [todos, setTodos] = React.useState([])
+  const todosRef = React.useRef(null)
+
+  const newTodoItem = {
+    user_id: 1000,
+    title: '',
+    due_on: null,
+    status: 'pending'
+  }
 
   const fetchTodos = React.useCallback(async () => {
     const data = await getTodos()
     setTodos(data)
   }, [])
 
-  const newTodoRef = React.useRef(null)
   React.useEffect(() => {
     fetchTodos()
   }, [fetchTodos])
-
-  const newTodoRefScroll = () => newTodoRef.current?.scrollIntoView()
 
   const handleUpdateTodo = async (id, data) => {
     await updateTodo(id, data)
@@ -28,18 +33,32 @@ const Todo = () => {
     fetchTodos()
   }
 
-  const handleNewTodo = async(data) => {
-    await addTodo(data)
+  const handleNewTodo = async() => {
+    await addTodo(newTodoItem)
     fetchTodos()
   }
 
+
+  const scrollToBottom = () => {
+    setTodos(todos => [...todos, newTodoItem])
+    if (todosRef.current) {
+      todosRef.current.scrollTop = todosRef.current.scrollHeight
+    }
+  }
+
   return (
-    <div>
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    }}>
       <div style={{
         flexDirection: 'row',
         alignItems: 'center',
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingBottom: '22px'
       }}>
         <Input
           id="myTask"
@@ -62,19 +81,24 @@ const Todo = () => {
         </Input>
         <Button
           color="primary"
-
+          onClick={scrollToBottom}
         >
           New Task
         </Button>
       </div>
-      {todos.map((item, index) => (
-        <TodoItem
-          item={item}
-          index={index}
-          updateTodo={handleUpdateTodo}
-          removeTodo={handleDeleteTodo}
-        />
-      ))}
+      <div style={{ flex: 1, overflowY: 'auto' }} ref={todosRef}>
+        {todos.map((item, index) => (
+          <TodoItem
+            key={index}
+            item={item}
+            index={index}
+            updateTodo={handleUpdateTodo}
+            removeTodo={handleDeleteTodo}
+            addTodo={handleNewTodo}
+            newTodoItem={newTodoItem}
+          />
+        ))}
+      </div>
     </div>
   )
 }

@@ -11,13 +11,14 @@ import { RiPencilLine } from 'react-icons/ri'
 import { FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap'
 import 'moment/locale/id'
 
-const TodoItem = ({ item, index, updateTodo, removeTodo }) => {
+const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) => {
 
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [showCalendar, setShowCalendar] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(null);
   const [checked, setChecked] = React.useState(false);
   const [note, setNote] = React.useState("")
+  const [isBlur, setIsBlur] = React.useState(true)
 
   React.useEffect(() => {
     setChecked(item.status === 'completed')
@@ -44,6 +45,8 @@ const TodoItem = ({ item, index, updateTodo, removeTodo }) => {
     setSelectedDate(value)
     setShowCalendar(false)
     updateData('datepicker')
+    // if (!newTodoItem.newItem) {
+    // }
   }
 
   const toggleShowCalendar = () => {
@@ -96,7 +99,7 @@ const TodoItem = ({ item, index, updateTodo, removeTodo }) => {
             item.id, 
             {
               ...dataWithoutId,
-              status: checked ? 'completed' : 'pending'
+              due_on: moment(selectedDate, 'DD/MM/YYYY').toISOString()
             } 
           ).then(() => {
             window.alert("Success Update Status")
@@ -117,6 +120,31 @@ const TodoItem = ({ item, index, updateTodo, removeTodo }) => {
     })
   }
 
+  const newTodo = (data) => {
+    addTodo(data).then(() => {
+      window.alert("Success Add Status")
+    }).catch(err => {
+      window.alert(err.message)
+    })
+  }
+
+  React.useEffect(() => {
+    const { newItem, ...newTodoItemAsyc } = {
+      newItem: true,
+      user_id: item.user_id,
+      title: item.title,
+      due_on: item.due_on,
+      status: item.status
+    }
+    if (newItem && selectedDate && note && isBlur) {
+      newTodo({
+        ...newTodoItemAsyc,
+        due_on: moment(selectedDate, 'DD/MM/YYYY').toISOString(),
+        title: note
+      })
+    }
+  }, [note, selectedDate, isBlur])
+
   return (
     <div key={index} style={{ borderBottom: '1px solid #828282' }}>
       <div style={{
@@ -134,7 +162,7 @@ const TodoItem = ({ item, index, updateTodo, removeTodo }) => {
               <Input 
                 type="checkbox" 
                 checked={checked}
-                onChange={handleCheck} 
+                onChange={handleCheck}
               />{' '}
               <strong style={{
                 marginLeft: 22,
@@ -223,8 +251,10 @@ const TodoItem = ({ item, index, updateTodo, removeTodo }) => {
               className='static-input'
               defaultValue={item.title}
               onChange={e => setNote(e.target.value)}
-              onBlur={(e) => {                
+              onClick={() => setIsBlur(false)}
+              onBlur={() => {      
                 updateData('note')
+                setIsBlur(true)
               }}
             />
           </InputGroup>

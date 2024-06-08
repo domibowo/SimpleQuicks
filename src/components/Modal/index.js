@@ -8,13 +8,16 @@ const Modal = () => {
       height: '80%',
       width: '734px',
       backgroundColor: '#FFFFFF',
-      padding: '20px',
       borderRadius: '8px',
       boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       overflowY: 'auto',
       bottom: '90px',
       right: '20px',
-      position: 'absolute'
+      position: 'absolute',
+      paddingTop: '24px',
+      paddingBottom: '24px',
+      paddingRight: '32px',
+      paddingLeft: '32px'
     }}>
       <Todo/>
     </Container>
