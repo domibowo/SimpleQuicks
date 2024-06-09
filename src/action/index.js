@@ -99,6 +99,33 @@ export const sendChatToUser = async(userId, text) => {
     })
     return response.data
   } catch (error) {
-    throw new Error('Failed to fetch data')
+    throw new Error('Failed to send message')
+  }
+}
+
+export const editMessage = async(userId, chatId, text, timestamp, side) => {
+  try {
+    const response = await axios.put(`https://${chatAppSecret}.mockapi.io/chat/log/users/${userId}/chatlog/${chatId}`, {
+      text: text,
+      timestamp: timestamp,
+      side: side,
+      userId: userId
+    }, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    return response.data
+  } catch (error) {
+    throw new Error('Failed to edit data')
+  }
+}
+
+export const removeChat = async(userId, chatId) => {
+  try {
+    const response = await axios.delete(`https://${chatAppSecret}.mockapi.io/chat/log/users/${userId}/chatlog/${chatId}`)
+    return response.status
+  } catch (error) {
+    throw new Error('Failed to delete chat')
   }
 }

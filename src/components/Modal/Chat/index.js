@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Input, InputGroup, InputGroupText, Spinner } from 'reactstrap'
-import { getUsers } from '../../../action'
+import { getUsers, sendChatToUser } from '../../../action'
 import { FaMagnifyingGlass } from 'react-icons/fa6'
 import UserItem from './UserItem'
 import ChatItem from './ChatItem'
@@ -13,6 +13,9 @@ const Chat = () => {
   const [isChatScreen, setIsChatScreen] = React.useState(false)
   const [userData, setUserData] = React.useState({})
   const [userChatLogs, setUserChatLogs] = React.useState([])
+  const [message, setMessage] = React.useState('')
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [query, setQuery] = React.useState('');
 
   const fetchUsers = React.useCallback(async () => {
     // Simulating a 3-second delay before setting loading to false
@@ -29,7 +32,7 @@ const Chat = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!isChatScreen && userLogs.length === 0 ) {
+    if (!isChatScreen && userLogs.length === 0) {
       fetchUsers();
     }
   }, [fetchUsers, isChatScreen, userLogs]);
@@ -56,6 +59,44 @@ const Chat = () => {
     setUserChatLogs([]);
   }
 
+  const sendMessage = () => {
+    sendChatToUser(
+      userData.id,
+      message
+    ).then((value) => {
+      setUserChatLogs(chatLogs => [...chatLogs, value])
+      setMessage('')
+    }).catch(err => {
+      window.alert(err.message)
+    })
+  }
+
+  const sendMessageByEnter = (e) => {
+    if (e.key === 'Enter') {
+      sendMessage()
+    }
+  }
+
+  const filterData = (query) => {
+    if (!query) {
+      setFilteredData(userLogs);
+    } else {
+      const lowercasedQuery = query.toLowerCase();
+      const filtered = userLogs.filter(item =>
+        item.name.toLowerCase().includes(lowercasedQuery)
+      );
+      setFilteredData(filtered);
+    }
+  };
+
+  const handleInputSearch = (e) => {
+    const value = e.target.value
+    setQuery(value);
+    filterData(value);
+
+  }
+  const dataFiltered = filteredData.length > 0 ?
+    filteredData : query === '' ? userLogs : []
   return (
     <div style={{
       height: '100%',
@@ -90,11 +131,16 @@ const Chat = () => {
                 <strong>X</strong>
               </div>
             </div>
-            <hr style={{paddingBottom: '12px'}}/>
+            <hr style={{ paddingBottom: '12px' }} />
           </div>
         ) :
-          <InputGroup style={{marginBottom: '22px'}}>
-            <Input placeholder="Search" style={{ borderRightWidth: '0px' }} />
+          <InputGroup style={{ marginBottom: '22px' }}>
+            <Input
+              placeholder="Search"
+              style={{ borderRightWidth: '0px' }}
+              value={query}
+              onChange={handleInputSearch}
+            />
             <InputGroupText style={{ backgroundColor: 'transparent' }}>
               <FaMagnifyingGlass />
             </InputGroupText>
@@ -122,21 +168,21 @@ const Chat = () => {
             Loading userLogs...
           </div> :
           isChatScreen ?
-          userChatLogs.length > 0 && userChatLogs.map((item, index) => (
-            <ChatItem
-              key={index}
-              userData={userData}
-              chatLog={item}
-            />
-          )) :
-          userLogs.length > 0 && userLogs.map((item, index) => (
-            <UserItem
-              key={index}
-              item={item}
-              index={index}
-              goToChatLog={goToChatLog}
-            />
-          ))
+            userChatLogs.length > 0 && userChatLogs.map((item, index) => (
+              <ChatItem
+                key={index}
+                userData={userData}
+                chatLog={item}
+              />
+            )) :
+            dataFiltered.length > 0 && dataFiltered.map((item, index) => (
+              <UserItem
+                key={index}
+                item={item}
+                index={index}
+                goToChatLog={goToChatLog}
+              />
+            ))
         }
       </div>
       {isChatScreen && (<div style={{
@@ -147,11 +193,16 @@ const Chat = () => {
         width: '100%',
         marginTop: '22px',
       }}>
-        <Input style={{ width: '80%' }} />
+        <Input
+          style={{ width: '80%' }}
+          onChange={e => setMessage(e.target.value)}
+          value={message}
+          onKeyDown={sendMessageByEnter}
+        />
         <Button color='primary' style={{
           width: '15%',
           marginRight: '15px'
-        }}>Send</Button>
+        }} onClick={sendMessage}>Send</Button>
       </div>)}
 
     </div>

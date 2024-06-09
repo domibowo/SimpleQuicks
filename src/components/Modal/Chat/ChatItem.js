@@ -3,10 +3,15 @@ import React from 'react'
 import 'moment/locale/id'
 import { RxDotsHorizontal } from 'react-icons/rx';
 import CustomPopover from '../../utils/CustomPopper';
+import { editMessage, removeChat } from '../../../action';
+import { Input } from 'reactstrap';
 
 const ChatItem = ({ userData, chatLog }) => {
   const isLeft = ['South', 'West'].includes(chatLog.side)
   const [hover, setHover] = React.useState(false);
+  const [message, setMessage] = React.useState(chatLog.text);
+  const [disableEditing, setDisableEditing] = React.useState(true);
+  const [deletedMessage, setDeletedMessage] = React.useState(false)
 
   const eventPopover = {
     trigger: <RxDotsHorizontal style={{ marginRight: 5, marginLeft: 5 }} />,
@@ -26,11 +31,37 @@ const ChatItem = ({ userData, chatLog }) => {
   const onLeave = () => setHover(false);
 
   const editChat = () => {
+    setDisableEditing(false);
+  }
 
+  const submitEdit = (e) => {
+    if (e.key === 'Enter') {
+      editMessage(
+        userData.id,
+        chatLog.message_id,
+        message,
+        chatLog.timestamp,
+        chatLog.side
+      ).then((value) => {
+        setMessage(value.text)
+      }).catch((err) => {
+        window.alert(err.message)
+      }).finally(() => {
+        setDisableEditing(true)
+      })
+    } else if (e.key === 'Escape') {
+      setMessage(chatLog.text)
+      setDisableEditing(true)
+    }
   }
 
   const deleteChat = () => {
-
+    removeChat(userData.id, chatLog.message_id).then(() => {
+      window.alert('Successfully deleted')
+      setDeletedMessage(true)
+    }).catch(err => {
+      window.alert(err.message)
+    })
   }
 
   const actions = [
@@ -74,7 +105,34 @@ const ChatItem = ({ userData, chatLog }) => {
         textAlign: 'left',
         alignSelf: isLeft ? 'flex-start' : 'flex-end',
       }}>
-        <div>{chatLog.text}</div>
+        {!disableEditing ? (
+          <Input
+            defaultValue={message}
+            onChange={e => setMessage(e.target.value)}
+            onKeyDown={submitEdit}
+            style={{
+              backgroundColor: 'transparent',
+              borderWidth: '0px',
+              width: '100%',
+              display: 'flex',
+              flexGrow: 1,
+              alignSelf: 'center'
+            }}
+          />
+        ) : (
+          <div
+            onClick={() => setDisableEditing(false)}
+            style={{
+              backgroundColor: 'transparent',
+              width: '100%',
+              cursor: 'pointer'
+            }}
+          >
+            {deletedMessage ? <i>Message has been deleted</i> : message}
+          </div>
+        )}
+
+
         <div style={{
           textAlign: 'right',
           fontSize: '0.8em',
