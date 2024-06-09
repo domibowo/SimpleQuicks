@@ -7,6 +7,7 @@ const FAB = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChatActionOpen, setIsChatActionOpen] = useState(false)
   const [isTaskActionOpen, setIsTaskActionOpen] = useState(false)
+  const [actionOpen, setActionOpen] = useState("")
 
   const toggleFab = () => {
     setIsOpen(!isOpen);
@@ -15,12 +16,14 @@ const FAB = () => {
   const toggleChatActionFab = () => {
     setIsOpen(false)
     setIsTaskActionOpen(false)
+    setActionOpen("chat")
     setIsChatActionOpen(!isChatActionOpen)
   }
 
   const toggleTaskActionFab = () => {
     setIsOpen(false)
     setIsChatActionOpen(false)
+    setActionOpen("task")
     setIsTaskActionOpen(!isTaskActionOpen)
   }
 
@@ -42,7 +45,7 @@ const FAB = () => {
 
   return (
     <div style={{flex:1}}>
-      {(isChatActionOpen || isTaskActionOpen) && <Modal/>}
+      {(isChatActionOpen || isTaskActionOpen) && <Modal actionOpen={actionOpen}/>}
       <div className="fab-container">
         {isChatActionOpen && (
           <div style={{flex: 1}}>

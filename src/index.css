@@ -15,3 +15,13 @@ code {
 html {
   scroll-behavior: smooth;
 }
+
+@font-face {
+  font-family: 'Lato-Bold';
+  src: local('Lato-Bold'), url(./fonts/Lato-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Lato-Regular';
+  src: local('Lato-Regular'), url(./fonts/Lato-Regular.ttf) format('truetype');
+}

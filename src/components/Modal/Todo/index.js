@@ -1,22 +1,26 @@
 import React from 'react'
-import { Button, Input } from 'reactstrap'
+import { Button, Input, Spinner } from 'reactstrap'
 import { addTodo, getTodos, removeTodo, updateTodo } from '../../../action'
 import TodoItem from '../Todo/TodoItem'
+import moment from 'moment'
 
 const Todo = () => {
   const [todos, setTodos] = React.useState([])
   const todosRef = React.useRef(null)
+  const [loading, setLoading] = React.useState(true)
 
   const newTodoItem = {
     user_id: 1000,
     title: '',
-    due_on: null,
+    due_on: moment(),
     status: 'pending'
   }
 
   const fetchTodos = React.useCallback(async () => {
-    const data = await getTodos()
-    setTodos(data)
+    await getTodos().then((values) => {
+      setLoading(false)
+      setTodos(values)
+    })
   }, [])
 
   React.useEffect(() => {
@@ -33,7 +37,7 @@ const Todo = () => {
     fetchTodos()
   }
 
-  const handleNewTodo = async() => {
+  const handleNewTodo = async () => {
     await addTodo(newTodoItem)
     fetchTodos()
   }
@@ -87,17 +91,37 @@ const Todo = () => {
         </Button>
       </div>
       <div style={{ flex: 1, overflowY: 'auto' }} ref={todosRef}>
-        {todos.map((item, index) => (
-          <TodoItem
-            key={index}
-            item={item}
-            index={index}
-            updateTodo={handleUpdateTodo}
-            removeTodo={handleDeleteTodo}
-            addTodo={handleNewTodo}
-            newTodoItem={newTodoItem}
-          />
-        ))}
+        {loading ?
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            position: 'absolute',
+            width: '100%',
+            flexDirection: 'column',
+          }}>
+            <Spinner
+              color="secondary"
+              style={{
+                height: '3rem',
+                width: '3rem'
+              }}
+            />
+            Loading Todos...
+          </div> :
+          todos.map((item, index) => (
+            <TodoItem
+              key={index}
+              item={item}
+              index={index}
+              updateTodo={handleUpdateTodo}
+              removeTodo={handleDeleteTodo}
+              addTodo={handleNewTodo}
+              newTodoItem={newTodoItem}
+            />
+          ))
+        }
       </div>
     </div>
   )

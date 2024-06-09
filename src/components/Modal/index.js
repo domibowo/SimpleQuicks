@@ -1,8 +1,9 @@
 import React from 'react'
 import Todo from './Todo'
 import { Container } from 'reactstrap'
+import Chat from './Chat'
 
-const Modal = () => {
+const Modal = ({actionOpen}) => {
   return (
     <Container style={{
       height: '80%',
@@ -19,7 +20,9 @@ const Modal = () => {
       paddingRight: '32px',
       paddingLeft: '32px'
     }}>
-      <Todo/>
+      {
+        actionOpen === 'chat' ? <Chat /> : <Todo />
+      }
     </Container>
   )
 }

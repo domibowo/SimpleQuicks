@@ -24,7 +24,7 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
     setChecked(item.status === 'completed')
   }, [item.status])
 
-  const deletePopover = {
+  const eventPopover = {
     trigger: <RxDotsHorizontal style={{ marginRight: 5, marginLeft: 5 }} />,
     body: (
       <div style={{cursor: 'pointer'}}>
@@ -32,7 +32,22 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
       </div>
     )
   };
+  const deleteTodo = () => {
+    removeTodo(item.id).then(() => {
+      window.alert("Success Delete Status")
+    }).catch(err => {
+      window.alert(err.message)
+    })
+  }
 
+  const actions = [
+    {
+      name: 'Delete',
+      color: 'red',
+      callback: deleteTodo,
+    },
+  ];
+  
   const toggleAccordion = (id) => {
     if (isOpen === id) {
       setIsOpen(null);
@@ -45,8 +60,6 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
     setSelectedDate(value)
     setShowCalendar(false)
     updateData('datepicker')
-    // if (!newTodoItem.newItem) {
-    // }
   }
 
   const toggleShowCalendar = () => {
@@ -56,6 +69,15 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
   const handleCheck = () => {
     setChecked(!checked)
     updateData('checkbox')
+  }
+
+  const updateTodoItem = (data) => {
+    updateTodo(
+      item.id, 
+      data
+    ).then(() => {
+      window.alert("Success Update Status")
+    }).catch((e) => window.alert(e.message))
   }
 
   const updateData = (type) => {
@@ -68,43 +90,28 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
     }
     switch (type) {
       case 'checkbox':
-        updateTodo(
-          item.id, 
-          {
+        updateTodoItem({
             ...dataWithoutId,
             status: checked ? 'completed' : 'pending'
-          } 
-        ).then(() => {
-          window.alert("Success Update Status")
-        }).catch((e) => window.alert(e.message))
+          })
         break;
 
       case 'note':
         if (note !== item.title) {
-          updateTodo(
-            item.id, 
-            {
-              ...dataWithoutId,
-              title: note
-            } 
-          ).then(() => {
-            window.alert("Success Update Status")
-          }).catch((e) => window.alert(e.message))
+        updateTodoItem({
+            ...dataWithoutId,
+            title: note
+          })
         }
         break;
       
       case 'datepicker':
         if (selectedDate) {
-          updateTodo(
-            item.id, 
-            {
-              ...dataWithoutId,
-              due_on: moment(selectedDate, 'DD/MM/YYYY').toISOString()
-            } 
-          ).then(() => {
-            window.alert("Success Update Status")
-          }).catch((e) => window.alert(e.message))
-          }
+          updateTodoItem({
+            ...dataWithoutId,
+            due_on: moment(selectedDate, 'DD/MM/YYYY').toISOString()
+          })
+        }
         break;
     
       default:
@@ -112,29 +119,17 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
     }
   }
 
-  const deleteTodo = () => {
-    removeTodo(item.id).then(() => {
-      window.alert("Success Delete Status")
-    }).catch(err => {
-      window.alert(err.message)
-    })
-  }
-
-  const newTodo = (data) => {
-    addTodo(data).then(() => {
-      window.alert("Success Add Status")
-    }).catch(err => {
-      window.alert(err.message)
-    })
-  }
-
   React.useEffect(() => {
     const { newItem, ...newTodoItemAsyc } = {
       newItem: true,
-      user_id: item.user_id,
-      title: item.title,
-      due_on: item.due_on,
-      status: item.status
+      ...newTodoItem
+    }
+    const newTodo = (data) => {
+      addTodo(data).then(() => {
+        window.alert("Success Add Status")
+      }).catch(err => {
+        window.alert(err.message)
+      })
     }
     if (newItem && selectedDate && note && isBlur) {
       newTodo({
@@ -143,7 +138,7 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
         title: note
       })
     }
-  }, [note, selectedDate, isBlur])
+  }, [note, selectedDate, isBlur, addTodo, newTodoItem])
 
   return (
     <div key={index} style={{ borderBottom: '1px solid #828282' }}>
@@ -191,7 +186,7 @@ const TodoItem = ({ item, index, updateTodo, removeTodo, addTodo, newTodoItem}) 
               transform: isOpen === index ? 'rotate(180deg)' : 'rotate(0deg)' 
             }} />
           </div>
-          <CustomPopover triggerId={`Popover-${item.id}`} content={deletePopover} btnAction={deleteTodo} />
+          <CustomPopover triggerId={`Popover-${item.id}`} content={eventPopover} actions={actions} />
         </div>
       </div>
       {isOpen === index && (
